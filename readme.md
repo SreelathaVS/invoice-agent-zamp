@@ -111,7 +111,7 @@ engine/
   pipeline.py           Streams stage events; saves runs
 config/policy.yaml      Every threshold, editable
 data/                   Mock ERP seed, sample PDFs, stored extractions, expected outcomes
-tests/                  20 tests: outcome AND reason for every sample invoice
+tests/                  12 tests: outcome AND reason for every sample invoice
 run_cli.py              Terminal runner
 ```
 
