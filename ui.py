@@ -6,6 +6,8 @@ banner, the extracted-data tables, the PO balance panel and the check trail.
 Colours use translucent backgrounds so the app works in light AND dark mode.
 """
 import html
+import os
+import tempfile
 from pathlib import Path
 
 import pandas as pd
@@ -57,11 +59,26 @@ def inject_css():
     st.markdown(CSS, unsafe_allow_html=True)
 
 
-def ensure_db():
-    """Create and seed the mock ERP on first launch so a fresh clone just works."""
+def get_db_path() -> Path:
+    """Which SQLite file this browser session should use.
+
+    Locally: the one shared data/ap.db (history survives page refreshes).
+    Deployed (secret PER_SESSION_DB=1): every visitor gets a PRIVATE copy of the seeded
+    mock ERP, so two evaluators never see each other's runs or trigger each other's
+    duplicate rejections. Streamlit pages in one session share st.session_state.
+    """
+    from data.seed_erp import init_db
+    if os.getenv("PER_SESSION_DB") == "1":
+        path = st.session_state.get("db_path")
+        if not path or not Path(path).exists():
+            fd, path = tempfile.mkstemp(prefix="ap_", suffix=".db")
+            os.close(fd)
+            init_db(Path(path))
+            st.session_state["db_path"] = path
+        return Path(path)
     if not DB_PATH.exists():
-        from data.seed_erp import init_db
         init_db()
+    return DB_PATH
 
 
 def money(v) -> str:

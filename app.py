@@ -16,12 +16,12 @@ from data.seed_erp import init_db
 from engine import pipeline
 from engine.extract import ROOT
 from engine.schemas import Invoice
-from ui import (banner_html, ensure_db, event_state, inject_css, pdf_png, render_details, stage_card_html)
+from ui import (banner_html, event_state, get_db_path, inject_css, pdf_png, render_details, stage_card_html)
 
 st.set_page_config(page_title="AP Invoice Agent: Live Run", page_icon="🧾", layout="wide")
 inject_css()
-ensure_db()
 load_dotenv(ROOT / ".env")
+DB = get_db_path()  # shared file locally, private copy per visitor when deployed
 
 SAMPLES = ROOT / "data" / "invoices"
 UPLOADS = ROOT / "data" / "uploads"
@@ -39,16 +39,22 @@ with st.sidebar:
     st.divider()
     st.caption("Re-running an invoice that was already processed is correctly rejected as a duplicate. Reset the database to start over.")
     if st.button("Reset demo database", width="stretch"):
-        init_db()
+        init_db(DB)
         st.session_state.pop("last", None)
         st.success("Database reset. History is empty.")
+    if st.button("Prepare split-invoice scenario", width="stretch",
+                 help="Runs split_A and split_B (both approved) so that split_C can be shown overrunning the PO."):
+        for f in ("split_A.pdf", "split_B.pdf"):
+            list(pipeline.run(SAMPLES / f, offline=offline, db_path=DB))
+        st.session_state.pop("last", None)
+        st.success("split_A and split_B are approved. Now run split_C.")
     if st.button("Run all 12 samples (resets first)", width="stretch"):
-        init_db()
+        init_db(DB)
         st.session_state.pop("last", None)
         bar, counts = st.progress(0.0, text="Starting..."), {}
         for i, r in enumerate(sample_rows):
             bar.progress(i / len(sample_rows), text=f"Processing {r['file']}")
-            final = [e for e in pipeline.run(SAMPLES / r["file"], offline=offline) if e.decision][-1].decision
+            final = [e for e in pipeline.run(SAMPLES / r["file"], offline=offline, db_path=DB) if e.decision][-1].decision
             counts[final.outcome.value] = counts.get(final.outcome.value, 0) + 1
         bar.progress(1.0, text="Done")
         st.success(" · ".join(f"{k}: {v}" for k, v in counts.items()))
@@ -65,6 +71,7 @@ if src == "Sample invoice":
     path = SAMPLES / row["file"]
 else:
     up = st.file_uploader("Upload an invoice PDF", type="pdf")
+    st.caption("Uploaded PDFs are sent to Google's Gemini API to be read. Please use sample or non-sensitive invoices only.")
     if up is not None:
         UPLOADS.mkdir(parents=True, exist_ok=True)
         path = UPLOADS / up.name
@@ -108,7 +115,7 @@ def show_details(events):
 
 
 if run_clicked and path is not None:
-    events = paint(pipeline.run(path, offline=offline, step_delay=delay), path)
+    events = paint(pipeline.run(path, offline=offline, step_delay=delay, db_path=DB), path)
     st.session_state["last"] = {"path": str(path), "events": events}
     show_details(events)
 elif st.session_state.get("last"):

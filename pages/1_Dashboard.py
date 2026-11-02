@@ -16,7 +16,7 @@ import streamlit as st
 
 from engine.config import connect
 from engine.schemas import Decision, Invoice
-from ui import banner_html, ensure_db, inject_css, money, outcome_chip, render_details
+from ui import banner_html, get_db_path, inject_css, money, outcome_chip, render_details
 
 OUTCOME_COLORS = {"APPROVED": "#16a34a", "FLAGGED": "#d97706", "REJECTED": "#dc2626"}  # same as the decision banners
 REASON_NAMES = {  # plain-English names for the buyer
@@ -26,10 +26,10 @@ REASON_NAMES = {  # plain-English names for the buyer
 
 st.set_page_config(page_title="AP Invoice Agent: Dashboard", page_icon="📊", layout="wide")
 inject_css()
-ensure_db()
+DB = get_db_path()
 st.title("📊 Dashboard")
 
-con = connect()
+con = connect(DB)
 raw = pd.read_sql_query("SELECT * FROM runs ORDER BY started_at DESC, rowid DESC", con)
 if raw.empty:
     st.info("No runs yet. Process an invoice on the **Live Run** page, or use *Run all 12 samples* in its sidebar.")
