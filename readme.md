@@ -60,8 +60,8 @@ PDF -> 1 Ingest -> 2 Extract (LLM) -> 3 Completeness -> 4 Arithmetic -> 5 Vendor
 
 | Finding                                                                                       | Outcome                                             |
 | --------------------------------------------------------------------------------------------- | --------------------------------------------------- |
-| Any **hard-stop** failure (an exact duplicate invoice, or a vendor who is explicitly blocked) | **REJECTED**                                        |
-| Any **needs-a-person** failure (see edge cases)                                               | **FLAGGED**, with reasons and a suggested next step |
+| Any **hard-stop** - failure (an exact duplicate invoice, or a vendor who is explicitly blocked) | **REJECTED**                                        |
+| Any **needs-a-person** - failure (see edge cases)                                               | **FLAGGED**, with reasons and a suggested next step |
 | Everything passes, or only small in-tolerance variances                                       | **APPROVED** (small variances are noted)            |
 
 Higher severity always wins, so one clean check can never outvote a fraud signal.
