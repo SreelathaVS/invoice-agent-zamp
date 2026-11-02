@@ -1,0 +1,13 @@
+run_order,file,expected_outcome,edge_case,key_check
+1,clean_01.pdf,APPROVED,happy path,all checks pass; tax itemised
+2,clean_02.pdf,APPROVED,happy path,no tax line; different layout
+3,clean_03.pdf,APPROVED,happy path + tolerance,gloves price +1.1% -> WARN inside 2% tolerance
+4,scanned_01.pdf,APPROVED,scanned image,no text layer; vision extraction path
+5,missing_fields_01.pdf,FLAGGED,missing metadata,no invoice number or date -> human review
+6,split_A.pdf,APPROVED,1 split invoicing,"stage 1: 40 of 100 hours; $6,000 left"
+7,split_B.pdf,APPROVED,1 split invoicing,"stage 2: 35 hours; $2,500 / 25 hours left"
+8,split_C.pdf,FLAGGED,1 split invoicing,32 hours billed but only 25 remain: PO overrun of $700
+9,bank_change_01.pdf,FLAGGED,2 bank mismatch,"everything else perfect, but account differs from vendor master"
+10,no_po_01.pdf,FLAGGED,3 missing PO + fuzzy match,suggest PO-1005 (clear winner vs PO-1007); never auto-approve
+11,dup_resubmit_01.pdf,FLAGGED,4 near-duplicate,"same vendor/amount/lines as INV-2041, new number+date"
+12,unapproved_vendor_01.pdf,REJECTED,hard reject,vendor not in approved master

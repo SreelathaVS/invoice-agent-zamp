@@ -1,0 +1,61 @@
+{
+  "vendor_name": {
+    "value": "BrightLine Logistics",
+    "confidence": 0.9,
+    "source_text": null
+  },
+  "invoice_number": {
+    "value": "INV-BL-0881",
+    "confidence": 0.9,
+    "source_text": null
+  },
+  "invoice_date": {
+    "value": "2026-10-12",
+    "confidence": 0.9,
+    "source_text": null
+  },
+  "po_reference": {
+    "value": "PO-1010",
+    "confidence": 0.9,
+    "source_text": null
+  },
+  "currency": {
+    "value": "USD",
+    "confidence": 0.9,
+    "source_text": null
+  },
+  "subtotal": {
+    "value": 1100.0,
+    "confidence": 0.9,
+    "source_text": null
+  },
+  "tax": {
+    "value": null,
+    "confidence": 0.0,
+    "source_text": null
+  },
+  "total": {
+    "value": 1100.0,
+    "confidence": 0.9,
+    "source_text": null
+  },
+  "bank_account": {
+    "value": "1100-2200-3302",
+    "confidence": 0.9,
+    "source_text": null
+  },
+  "line_items": [
+    {
+      "description": "Pallet wrap roll",
+      "quantity": 100,
+      "unit_price": 8.0,
+      "amount": 800.0
+    },
+    {
+      "description": "Strapping reel",
+      "quantity": 50,
+      "unit_price": 6.0,
+      "amount": 300.0
+    }
+  ]
+}

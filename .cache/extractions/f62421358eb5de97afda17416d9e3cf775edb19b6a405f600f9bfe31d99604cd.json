@@ -1,0 +1,61 @@
+{
+  "vendor_name": {
+    "value": "Northwind Stationers",
+    "confidence": 1.0,
+    "source_text": "Northwind Stationers"
+  },
+  "invoice_number": {
+    "value": "INV-NW-3301",
+    "confidence": 1.0,
+    "source_text": "INV-NW-3301"
+  },
+  "invoice_date": {
+    "value": "2026-10-05",
+    "confidence": 1.0,
+    "source_text": "2026-10-05"
+  },
+  "po_reference": {
+    "value": "PO-1001",
+    "confidence": 1.0,
+    "source_text": "PO-1001"
+  },
+  "currency": {
+    "value": "USD",
+    "confidence": 1.0,
+    "source_text": "Currency: USD"
+  },
+  "subtotal": {
+    "value": 2100.0,
+    "confidence": 1.0,
+    "source_text": "$2,100.00"
+  },
+  "tax": {
+    "value": 168.0,
+    "confidence": 1.0,
+    "source_text": "$168.00"
+  },
+  "total": {
+    "value": 2268.0,
+    "confidence": 1.0,
+    "source_text": "$2,268.00"
+  },
+  "bank_account": {
+    "value": "1100-2200-3301",
+    "confidence": 1.0,
+    "source_text": "Account No. 1100-2200-3301"
+  },
+  "line_items": [
+    {
+      "description": "A4 Copier Paper (ream)",
+      "quantity": 200.0,
+      "unit_price": 4.5,
+      "amount": 900.0
+    },
+    {
+      "description": "Toner Cartridge HP 26A",
+      "quantity": 20.0,
+      "unit_price": 60.0,
+      "amount": 1200.0
+    }
+  ]
+}

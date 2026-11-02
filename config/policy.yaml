@@ -1,0 +1,27 @@
+# Business policy: every threshold the rules engine uses lives here,
+# so a buyer can change behaviour without touching code.
+llm:
+  provider: gemini
+  models: # tried in order; free-tier quota is tracked PER MODEL, so the 2nd is a real fallback
+    - gemini-3.6-flash # your chosen primary (confirm names in AI Studio; they change over time)
+    - gemini-flash-lite-latest
+  temperature: null # null = do not send (newer Gemini models may reject it); the cache keeps results repeatable
+
+tolerance:
+  price_auto_pct: 2.0 # line price variance <= this -> accepted (WARN if > 0)
+  price_flag_pct: 5.0 # above this -> high-severity flag
+  tax_abs: 1.00 # allowed difference between stated and expected tax ($)
+  total_abs: 0.05 # allowed rounding gap: subtotal + tax vs total ($)
+
+confidence:
+  min_critical_field: 0.80 # below this on a critical field -> FLAGGED
+  critical_fields: [vendor_name, invoice_number, invoice_date, total]
+
+duplicate:
+  near_window_days: 30 # near-duplicate = same vendor within this window ...
+  amount_tolerance_pct: 1.0 # ... with total within this %, and similar lines
+  line_similarity_min: 0.80
+
+po_match:
+  fuzzy_min_score: 0.60 # minimum score for a suggested PO
+  clear_winner_margin: 0.15 # winner must beat runner-up by this to be "clear"

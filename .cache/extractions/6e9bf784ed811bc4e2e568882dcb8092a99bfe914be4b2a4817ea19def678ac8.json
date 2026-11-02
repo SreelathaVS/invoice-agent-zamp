@@ -1,0 +1,55 @@
+{
+  "vendor_name": {
+    "value": "Meridian IT Services",
+    "confidence": 1.0,
+    "source_text": "Meridian IT Services"
+  },
+  "invoice_number": {
+    "value": null,
+    "confidence": 0.0,
+    "source_text": null
+  },
+  "invoice_date": {
+    "value": null,
+    "confidence": 0.0,
+    "source_text": null
+  },
+  "po_reference": {
+    "value": "PO-1009",
+    "confidence": 1.0,
+    "source_text": "PO-1009"
+  },
+  "currency": {
+    "value": "USD",
+    "confidence": 1.0,
+    "source_text": "USD"
+  },
+  "subtotal": {
+    "value": 4800.0,
+    "confidence": 1.0,
+    "source_text": "4,800.00"
+  },
+  "tax": {
+    "value": null,
+    "confidence": 0.0,
+    "source_text": null
+  },
+  "total": {
+    "value": 4800.0,
+    "confidence": 1.0,
+    "source_text": "4,800.00"
+  },
+  "bank_account": {
+    "value": "1100-2200-3304",
+    "confidence": 1.0,
+    "source_text": "1100-2200-3304"
+  },
+  "line_items": [
+    {
+      "description": "Cloud hosting - monthly",
+      "quantity": 12.0,
+      "unit_price": 400.0,
+      "amount": 4800.0
+    }
+  ]
+}

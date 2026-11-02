@@ -1,0 +1,55 @@
+{
+  "vendor_name": {
+    "value": "Apex Industrial Supply",
+    "confidence": 1.0,
+    "source_text": "Apex Industrial\nSupply"
+  },
+  "invoice_number": {
+    "value": "INV2041-R",
+    "confidence": 1.0,
+    "source_text": "INV2041-R"
+  },
+  "invoice_date": {
+    "value": "2026-10-24",
+    "confidence": 1.0,
+    "source_text": "2026-10-24"
+  },
+  "po_reference": {
+    "value": "PO-1008",
+    "confidence": 1.0,
+    "source_text": "PO-1008"
+  },
+  "currency": {
+    "value": "USD",
+    "confidence": 1.0,
+    "source_text": "Currency: USD"
+  },
+  "subtotal": {
+    "value": 1400.0,
+    "confidence": 1.0,
+    "source_text": "$1,400.00"
+  },
+  "tax": {
+    "value": 112.0,
+    "confidence": 1.0,
+    "source_text": "$112.00"
+  },
+  "total": {
+    "value": 1512.0,
+    "confidence": 1.0,
+    "source_text": "$1,512.00"
+  },
+  "bank_account": {
+    "value": "1100-2200-3303",
+    "confidence": 1.0,
+    "source_text": "Account No. 1100-2200-3303"
+  },
+  "line_items": [
+    {
+      "description": "Safety signage panels",
+      "quantity": 40.0,
+      "unit_price": 35.0,
+      "amount": 1400.0
+    }
+  ]
+}

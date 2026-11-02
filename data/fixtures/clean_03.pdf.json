@@ -1,0 +1,61 @@
+{
+  "vendor_name": {
+    "value": "Apex Industrial Supply",
+    "confidence": 0.97,
+    "source_text": null
+  },
+  "invoice_number": {
+    "value": "INV-AIS-5521",
+    "confidence": 0.97,
+    "source_text": null
+  },
+  "invoice_date": {
+    "value": "2026-10-10",
+    "confidence": 0.97,
+    "source_text": null
+  },
+  "po_reference": {
+    "value": "PO-1003",
+    "confidence": 0.97,
+    "source_text": null
+  },
+  "currency": {
+    "value": "USD",
+    "confidence": 0.97,
+    "source_text": null
+  },
+  "subtotal": {
+    "value": 1570.0,
+    "confidence": 0.97,
+    "source_text": null
+  },
+  "tax": {
+    "value": 125.6,
+    "confidence": 0.97,
+    "source_text": null
+  },
+  "total": {
+    "value": 1695.6,
+    "confidence": 0.97,
+    "source_text": null
+  },
+  "bank_account": {
+    "value": "1100-2200-3303",
+    "confidence": 0.97,
+    "source_text": null
+  },
+  "line_items": [
+    {
+      "description": "Safety gloves (box of 12)",
+      "quantity": 50,
+      "unit_price": 18.2,
+      "amount": 910.0
+    },
+    {
+      "description": "Hard hat, ANSI rated",
+      "quantity": 30,
+      "unit_price": 22.0,
+      "amount": 660.0
+    }
+  ]
+}

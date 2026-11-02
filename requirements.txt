@@ -1,0 +1,13 @@
+streamlit>=1.50
+pydantic>=2
+pdfplumber
+pymupdf
+google-genai
+python-dotenv
+pyyaml
+reportlab
+pillow
+numpy
+pandas
+rapidfuzz
+pytest

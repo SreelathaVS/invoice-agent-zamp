@@ -1,0 +1,61 @@
+{
+  "vendor_name": {
+    "value": "BrightLine Logistics",
+    "confidence": 1.0,
+    "source_text": "BrightLine Logistics"
+  },
+  "invoice_number": {
+    "value": "INV-BL-0877",
+    "confidence": 1.0,
+    "source_text": "Invoice #: INV-BL-0877"
+  },
+  "invoice_date": {
+    "value": "2026-10-08",
+    "confidence": 1.0,
+    "source_text": "Date: 2026-10-08"
+  },
+  "po_reference": {
+    "value": "PO-1002",
+    "confidence": 1.0,
+    "source_text": "Your Ref: PO-1002"
+  },
+  "currency": {
+    "value": "USD",
+    "confidence": 1.0,
+    "source_text": "Currency: USD"
+  },
+  "subtotal": {
+    "value": 3500.0,
+    "confidence": 1.0,
+    "source_text": "Net $3,500.00"
+  },
+  "tax": {
+    "value": null,
+    "confidence": 0.0,
+    "source_text": null
+  },
+  "total": {
+    "value": 3500.0,
+    "confidence": 1.0,
+    "source_text": "Amount payable $3,500.00"
+  },
+  "bank_account": {
+    "value": "1100-2200-3302",
+    "confidence": 1.0,
+    "source_text": "Account No. 1100-2200-3302"
+  },
+  "line_items": [
+    {
+      "description": "Freight - Zone A shipment",
+      "quantity": 10.0,
+      "unit_price": 250.0,
+      "amount": 2500.0
+    },
+    {
+      "description": "Warehouse handling (per hour)",
+      "quantity": 40.0,
+      "unit_price": 25.0,
+      "amount": 1000.0
+    }
+  ]
+}

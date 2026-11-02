@@ -1,0 +1,17 @@
+.env
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local database and state files (the app creates these)
+*.db
+*.sqlite
+*.sqlite3
+
+# Invoices uploaded through the app (the 12 samples in data/invoices stay tracked)
+data/uploads/
+test_invoices/
+
+# Local secrets and environments
+.streamlit/
+.venv/

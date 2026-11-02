@@ -1,0 +1,55 @@
+{
+  "vendor_name": {
+    "value": "Meridian IT Services",
+    "confidence": 0.95,
+    "source_text": "Meridian IT\nServices"
+  },
+  "invoice_number": {
+    "value": "INV-MIT-1101",
+    "confidence": 0.95,
+    "source_text": "INV-MIT-1101"
+  },
+  "invoice_date": {
+    "value": "2026-09-15",
+    "confidence": 0.95,
+    "source_text": "2026-09-15"
+  },
+  "po_reference": {
+    "value": "PO-1004",
+    "confidence": 0.95,
+    "source_text": "PO-1004"
+  },
+  "currency": {
+    "value": "USD",
+    "confidence": 0.95,
+    "source_text": "Currency: USD"
+  },
+  "subtotal": {
+    "value": 4000.0,
+    "confidence": 0.95,
+    "source_text": "$4,000.00"
+  },
+  "tax": {
+    "value": null,
+    "confidence": 0.0,
+    "source_text": null
+  },
+  "total": {
+    "value": 4000.0,
+    "confidence": 0.95,
+    "source_text": "$4,000.00"
+  },
+  "bank_account": {
+    "value": "1100-2200-3304",
+    "confidence": 0.95,
+    "source_text": "1100-2200-3304"
+  },
+  "line_items": [
+    {
+      "description": "Software development hours",
+      "quantity": 40.0,
+      "unit_price": 100.0,
+      "amount": 4000.0
+    }
+  ]
+}

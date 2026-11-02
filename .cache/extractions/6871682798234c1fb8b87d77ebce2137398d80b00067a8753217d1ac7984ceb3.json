@@ -1,0 +1,61 @@
+{
+  "vendor_name": {
+    "value": "Greenfield Catering Co",
+    "confidence": 1.0,
+    "source_text": "Greenfield Catering Co"
+  },
+  "invoice_number": {
+    "value": "INV-GF-0412",
+    "confidence": 1.0,
+    "source_text": "INV-GF-0412"
+  },
+  "invoice_date": {
+    "value": "2026-10-22",
+    "confidence": 1.0,
+    "source_text": "2026-10-22"
+  },
+  "po_reference": {
+    "value": null,
+    "confidence": 0.0,
+    "source_text": null
+  },
+  "currency": {
+    "value": "USD",
+    "confidence": 1.0,
+    "source_text": "USD"
+  },
+  "subtotal": {
+    "value": 4400.0,
+    "confidence": 1.0,
+    "source_text": "$4,400.00"
+  },
+  "tax": {
+    "value": 220.0,
+    "confidence": 1.0,
+    "source_text": "$220.00"
+  },
+  "total": {
+    "value": 4620.0,
+    "confidence": 1.0,
+    "source_text": "$4,620.00"
+  },
+  "bank_account": {
+    "value": "1100-2200-3305",
+    "confidence": 1.0,
+    "source_text": "1100-2200-3305"
+  },
+  "line_items": [
+    {
+      "description": "Boxed lunches",
+      "quantity": 300.0,
+      "unit_price": 12.0,
+      "amount": 3600.0
+    },
+    {
+      "description": "Coffee station service",
+      "quantity": 10.0,
+      "unit_price": 80.0,
+      "amount": 800.0
+    }
+  ]
+}

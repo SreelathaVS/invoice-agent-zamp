@@ -1,0 +1,55 @@
+{
+  "vendor_name": {
+    "value": "Shadow Trading LLC",
+    "confidence": 1.0,
+    "source_text": "Shadow Trading LLC"
+  },
+  "invoice_number": {
+    "value": "INV-ST-77",
+    "confidence": 1.0,
+    "source_text": "INV-ST-77"
+  },
+  "invoice_date": {
+    "value": "2026-10-27",
+    "confidence": 1.0,
+    "source_text": "2026-10-27"
+  },
+  "po_reference": {
+    "value": null,
+    "confidence": 0.0,
+    "source_text": null
+  },
+  "currency": {
+    "value": "USD",
+    "confidence": 1.0,
+    "source_text": "USD"
+  },
+  "subtotal": {
+    "value": 950.0,
+    "confidence": 1.0,
+    "source_text": "950.00"
+  },
+  "tax": {
+    "value": null,
+    "confidence": 0.0,
+    "source_text": null
+  },
+  "total": {
+    "value": 950.0,
+    "confidence": 1.0,
+    "source_text": "950.00"
+  },
+  "bank_account": {
+    "value": "9000-0000-1234",
+    "confidence": 1.0,
+    "source_text": "9000-0000-1234"
+  },
+  "line_items": [
+    {
+      "description": "Office supplies, assorted",
+      "quantity": 1.0,
+      "unit_price": 950.0,
+      "amount": 950.0
+    }
+  ]
+}
