@@ -20,7 +20,7 @@ importantly, **stops and asks a person** whenever something looks off.
 python -m venv .venv
 .venv\Scripts\activate            # macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
-copy .env.example .env            # then put your key in .env:  GEMINI_API_KEY=...
+# Create .env file root folder, then put your key in .env:  GEMINI_API_KEY=...
 streamlit run app.py
 ```
 
