@@ -10,4 +10,4 @@ run_order,file,expected_outcome,edge_case,key_check
 9,bank_change_01.pdf,FLAGGED,2 bank mismatch,"everything else perfect, but account differs from vendor master"
 10,no_po_01.pdf,FLAGGED,3 missing PO + fuzzy match,suggest PO-1005 (clear winner vs PO-1007); never auto-approve
 11,dup_resubmit_01.pdf,FLAGGED,4 near-duplicate,"same vendor/amount/lines as INV-2041, new number+date"
-12,unapproved_vendor_01.pdf,REJECTED,hard reject,vendor not in approved master
+12,unapproved_vendor_01.pdf,FLAGGED,unknown vendor,supplier not in vendor master: hold pending onboarding

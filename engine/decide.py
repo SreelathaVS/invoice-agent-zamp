@@ -18,7 +18,7 @@ from .schemas import CheckResult, CheckStatus as S, Decision, Outcome, Severity 
 ACTIONS = {
     "completeness": "Get the missing details from the vendor (or find the original document) and resubmit.",
     "math_consistency": "Compare the arithmetic with the PDF; if the vendor made the error, request a corrected invoice.",
-    "vendor": "Do not pay. If this is a legitimate new supplier, route them through vendor onboarding first.",
+    "vendor": "Hold the invoice. Check whether this is a legitimate new supplier and, if so, route them through vendor onboarding (including bank-detail verification) before paying.",
     "duplicate": "Check whether the earlier invoice was already paid; if so, do not pay this one.",
     "po_match": "Confirm the correct purchase order with the requester or vendor and link it before approving.",
     "line_prices": "Ask procurement whether the new price was agreed; otherwise request a credit note.",
@@ -29,7 +29,7 @@ ACTIONS = {
 }
 
 # Most dangerous findings are listed first for the reviewer.
-PRIORITY = ["bank_account", "duplicate", "po_balance", "po_match", "line_prices", "tax", "math_consistency", "completeness", "extraction"]
+PRIORITY = ["vendor", "bank_account", "duplicate", "po_balance", "po_match", "line_prices", "tax", "math_consistency", "completeness", "extraction"]
 
 
 def _rank(c: CheckResult) -> int:

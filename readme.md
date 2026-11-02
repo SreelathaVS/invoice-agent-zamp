@@ -58,11 +58,11 @@ PDF -> 1 Ingest -> 2 Extract (LLM) -> 3 Completeness -> 4 Arithmetic -> 5 Vendor
 
 ### Decision rules
 
-| Finding                                                        | Outcome                                             |
-| -------------------------------------------------------------- | --------------------------------------------------- |
-| Any **hard-stop** failure (unapproved vendor, exact duplicate) | **REJECTED**                                        |
-| Any **needs-a-person** failure (see edge cases)                | **FLAGGED**, with reasons and a suggested next step |
-| Everything passes, or only small in-tolerance variances        | **APPROVED** (small variances are noted)            |
+| Finding                                                                                       | Outcome                                             |
+| --------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| Any **hard-stop** failure (an exact duplicate invoice, or a vendor who is explicitly blocked) | **REJECTED**                                        |
+| Any **needs-a-person** failure (see edge cases)                                               | **FLAGGED**, with reasons and a suggested next step |
+| Everything passes, or only small in-tolerance variances                                       | **APPROVED** (small variances are noted)            |
 
 Higher severity always wins, so one clean check can never outvote a fraud signal.
 All thresholds (price tolerance, confidence limit, duplicate window, PO-match scoring) live in `config/policy.yaml`.
@@ -76,7 +76,7 @@ All thresholds (price tolerance, confidence limit, duplicate window, PO-match sc
 | 3   | **No PO reference.**                                                                                                                              | Finds the vendor's best-fitting open PO by item descriptions and prices, shows the score and runner-up, and flags it as a _suggestion_ a person must confirm. | Saves the reviewer the search, but a guess must never move money.                                                          |
 | 4   | **Near-duplicate resubmission.** Same vendor, amount and items as a paid invoice, but a re-keyed number (`INV-2041` vs `INV2041-R`) and new date. | Flagged as a probable duplicate.                                                                                                                              | Exact-match duplicate checks miss exactly the cases that cost real money.                                                  |
 
-Also covered: a **scanned** (image-only) invoice, **missing fields** (no invoice number or date), an **unapproved vendor**,
+Also covered: a **scanned** (image-only) invoice, **missing fields** (no invoice number or date), an **unknown vendor** (held pending onboarding rather than rejected, since a new supplier is not necessarily fraud),
 and a **small in-tolerance price variance** (+1.1%) that is accepted with a note.
 
 ## The 12 sample invoices
@@ -93,9 +93,9 @@ Run in this order on a freshly reset database (`expected.csv` has the full list 
 | `bank_change_01`                   | Flagged (bank details changed)                              |
 | `no_po_01`                         | Flagged (suggests PO-1005)                                  |
 | `dup_resubmit_01`                  | Flagged (probable duplicate)                                |
-| `unapproved_vendor_01`             | Rejected                                                    |
+| `unapproved_vendor_01`             | Flagged (unknown supplier: hold pending onboarding)         |
 
-Re-running an invoice that was already processed is correctly rejected as a duplicate; use **Reset demo database** to start over.
+To see a **Rejected** outcome, run any invoice a second time: an exact duplicate is a hard stop. Use **Reset demo database** to start over.
 
 ## Project layout
 

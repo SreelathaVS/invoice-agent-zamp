@@ -139,7 +139,8 @@ def math_consistency(ctx: Ctx) -> CheckResult:
 
 # ------------------------------------------------------------------ 3. vendor
 def vendor(ctx: Ctx) -> CheckResult:
-    """Is this an approved supplier? Fuzzy name match against the vendor master."""
+    """Is this an approved supplier? Fuzzy name match against the vendor master.
+    Unknown supplier -> FLAG (hold pending onboarding). Known but blocked supplier -> REJECT."""
     name = ctx.inv.vendor_name.value
     if not name:
         return res("vendor", S.FAIL, "No vendor name could be read, so the supplier cannot be verified.", V.FLAG)
@@ -151,8 +152,11 @@ def vendor(ctx: Ctx) -> CheckResult:
         if best["approved"]:
             return res("vendor", S.PASS, f"'{name}' is an approved vendor ({best['vendor_id']}, {best['name']}).", vendor_id=best["vendor_id"], match_score=round(score))
         return res("vendor", S.FAIL, f"'{best['name']}' exists but is NOT approved for purchasing.", V.REJECT, vendor_id=best["vendor_id"])
-    return res("vendor", S.FAIL, f"'{name}' is not on the approved vendor list (closest match: {best['name']}, {score:.0f}% similar).",
-               V.REJECT, closest=best["name"], match_score=round(score))
+    # Unknown supplier: not necessarily fraud (often a new supplier not yet set up), so HOLD for a person
+    # instead of rejecting. Only an explicitly blocked vendor (above) is a hard stop.
+    return res("vendor", S.FAIL, f"'{name}' is not a known vendor (closest match: {best['name']}, {score:.0f}% similar). "
+               "Hold the invoice until the supplier is verified and onboarded.",
+               V.FLAG, closest=best["name"], match_score=round(score))
 
 
 # ------------------------------------------------------------------ 4. duplicates

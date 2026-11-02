@@ -37,6 +37,37 @@ def test_reason(results, file, check):
     assert check in failing, f"{file}: expected {check} to fail, got {failing}"
 
 
+def _run(db, name):
+    return list(pipeline.run(ROOT / "data" / "invoices" / name, offline=True, db_path=db))[-1].decision
+
+
+def test_exact_duplicate_is_rejected(tmp_path):
+    db = tmp_path / "d.db"
+    init_db(db)
+    assert _run(db, "clean_01.pdf").outcome.value == "APPROVED"
+    second = _run(db, "clean_01.pdf")  # same invoice again
+    assert second.outcome.value == "REJECTED"
+    assert "duplicate" in {c.name for c in second.checks if c.status.value == "FAIL"}
+
+
+def test_blocked_vendor_is_rejected(tmp_path):
+    import sqlite3
+    db = tmp_path / "b.db"
+    init_db(db)
+    con = sqlite3.connect(db)
+    con.execute("UPDATE vendors SET approved=0 WHERE vendor_id='V001'")
+    con.commit()
+    con.close()
+    d = _run(db, "clean_01.pdf")
+    assert d.outcome.value == "REJECTED"
+    assert "vendor" in {c.name for c in d.checks if c.status.value == "FAIL"}
+
+
+def test_unknown_vendor_is_held_not_rejected(results):
+    d = results["unapproved_vendor_01.pdf"]
+    assert d.outcome.value == "FLAGGED" and "onboard" in d.suggested_action.lower()
+
+
 def test_no_po_suggests_right_po(results):
     assert results["no_po_01.pdf"].matched_po == "PO-1005"
 

@@ -79,10 +79,10 @@ SPECS = [
     dict(order=11, file="dup_resubmit_01.pdf", layout="modern", vendor="V003", number="INV2041-R", date="2026-10-24",
          po="PO-1008", lines=[("Safety signage panels", 40, 35.00)], tax=0.08,
          expect="FLAGGED", edge="4 near-duplicate", key="same vendor/amount/lines as INV-2041, new number+date"),
-    # ---- hard reject ----
+    # ---- unknown supplier: hold pending onboarding ----
     dict(order=12, file="unapproved_vendor_01.pdf", layout="minimal", vendor="XXXX", number="INV-ST-77", date="2026-10-27",
          po=None, omit=["po"], lines=[("Office supplies, assorted", 1, 950.00)], tax=None,
-         expect="REJECTED", edge="hard reject", key="vendor not in approved master"),
+         expect="FLAGGED", edge="unknown vendor", key="supplier not in vendor master: hold pending onboarding"),
 ]
 
 LABELS = {  # same facts, different words per layout: this is what the LLM must cope with
