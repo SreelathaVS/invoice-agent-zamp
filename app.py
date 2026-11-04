@@ -48,7 +48,7 @@ with st.sidebar:
             list(pipeline.run(SAMPLES / f, offline=offline, db_path=DB))
         st.session_state.pop("last", None)
         st.success("split_A and split_B are approved. Now run split_C.")
-    if st.button("Run all 12 samples (resets first)", width="stretch"):
+    if st.button("Run all 13 samples (resets first)", width="stretch"):
         init_db(DB)
         st.session_state.pop("last", None)
         bar, counts = st.progress(0.0, text="Starting..."), {}
