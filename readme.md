@@ -25,8 +25,7 @@ streamlit run app.py
 ```
 
 - The mock procurement database seeds itself on first launch.
-- **No API key? It still runs.** The 12 sample invoices have stored extractions (toggle _Offline mode_ in the sidebar).
-- Uploading your **own** PDF needs a Gemini key (free tier works).
+- On the hosted demo, uploads work without any setup. When running locally, reading your own PDF needs a Gemini API key in .env (the free tier works); the 12 sample invoices need none.
 - `python run_cli.py --all --offline` runs all 12 samples in the terminal. `python -m pytest -q` runs the test suite.
 
 ## What you will see
