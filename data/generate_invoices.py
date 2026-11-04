@@ -17,6 +17,7 @@ trio depends on earlier approvals consuming the PO balance.
 import csv
 import json
 import random
+import shutil
 from pathlib import Path
 
 import pymupdf as fitz  # PyMuPDF
@@ -79,10 +80,13 @@ SPECS = [
     dict(order=11, file="dup_resubmit_01.pdf", layout="modern", vendor="V003", number="INV2041-R", date="2026-10-24",
          po="PO-1008", lines=[("Safety signage panels", 40, 35.00)], tax=0.08,
          expect="FLAGGED", edge="4 near-duplicate", key="same vendor/amount/lines as INV-2041, new number+date"),
-    # ---- unknown supplier: hold pending onboarding ----
+    # ---- blocked supplier: hard stop ----
     dict(order=12, file="unapproved_vendor_01.pdf", layout="minimal", vendor="XXXX", number="INV-ST-77", date="2026-10-27",
          po=None, omit=["po"], lines=[("Office supplies, assorted", 1, 950.00)], tax=None,
-         expect="FLAGGED", edge="unknown vendor", key="supplier not in vendor master: hold pending onboarding"),
+         expect="REJECTED", edge="blocked vendor", key="supplier is on the blocked list: hard stop"),
+    # ---- exact duplicate: the vendor re-sends the identical invoice (a byte-for-byte copy of clean_01) ----
+    dict(order=13, file="exact_dup_01.pdf", copy_of="clean_01.pdf",
+         expect="REJECTED", edge="5 exact duplicate", key="same vendor + invoice number as clean_01, already processed: hard stop"),
 ]
 
 LABELS = {  # same facts, different words per layout: this is what the LLM must cope with
@@ -248,6 +252,10 @@ def main():
     random.seed(1)
     for spec in SPECS:
         p = OUT / spec["file"]
+        if spec.get("copy_of"):  # a re-sent copy: same bytes, so the extraction cache already knows it
+            shutil.copy(OUT / spec["copy_of"], p)
+            shutil.copy(FIXTURES / f"{spec['copy_of']}.json", FIXTURES / f"{spec['file']}.json")
+            continue
         render(spec, p)
         if spec.get("scanned"):
             make_scanned(p)

@@ -20,13 +20,14 @@ importantly, **stops and asks a person** whenever something looks off.
 python -m venv .venv
 .venv\Scripts\activate            # macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
-# Create .env file root folder, then put your key in .env:  GEMINI_API_KEY=...
+copy .env.example .env            # then put your key in .env:  GEMINI_API_KEY=...
 streamlit run app.py
 ```
 
 - The mock procurement database seeds itself on first launch.
-- On the hosted demo, uploads work without any setup. When running locally, reading your own PDF needs a Gemini API key in .env (the free tier works); the 12 sample invoices need none.
-- `python run_cli.py --all --offline` runs all 12 samples in the terminal. `python -m pytest -q` runs the test suite.
+- **No API key? It still runs.** The 13 sample invoices have stored extractions (toggle _Offline mode_ in the sidebar).
+- Uploading your **own** PDF needs a Gemini key (free tier works).
+- `python run_cli.py --all --offline` runs all 13 samples in the terminal. `python -m pytest -q` runs the test suite.
 
 ## What you will see
 
@@ -59,8 +60,8 @@ PDF -> 1 Ingest -> 2 Extract (LLM) -> 3 Completeness -> 4 Arithmetic -> 5 Vendor
 
 | Finding                                                                                       | Outcome                                             |
 | --------------------------------------------------------------------------------------------- | --------------------------------------------------- |
-| Any **hard-stop** - failure (an exact duplicate invoice, or a vendor who is explicitly blocked) | **REJECTED**                                        |
-| Any **needs-a-person** - failure (see edge cases)                                               | **FLAGGED**, with reasons and a suggested next step |
+| Any **hard-stop** failure (an exact duplicate invoice, or a vendor who is explicitly blocked) | **REJECTED**                                        |
+| Any **needs-a-person** failure (see edge cases)                                               | **FLAGGED**, with reasons and a suggested next step |
 | Everything passes, or only small in-tolerance variances                                       | **APPROVED** (small variances are noted)            |
 
 Higher severity always wins, so one clean check can never outvote a fraud signal.
@@ -68,33 +69,35 @@ All thresholds (price tolerance, confidence limit, duplicate window, PO-match sc
 
 ## Edge cases (and why they matter)
 
-| #   | Scenario                                                                                                                                          | Behaviour                                                                                                                                                     | Business reasoning                                                                                                         |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| 1   | **Split invoicing against one PO.** A $10,000 PO billed in three stages.                                                                          | Stages 1 and 2 approve and consume the PO. Stage 3 bills 32 hours when only 25 remain: flagged, showing the $700 overrun.                                     | Vendors legitimately bill in stages; checking each invoice alone either blocks real invoices or lets over-billing through. |
-| 2   | **Bank account changed.** Everything else is perfect, but the payment account differs from the vendor master.                                     | Always flagged as high risk; never auto-approved. Suggested action: call the vendor on the number in the vendor master.                                       | Classic invoice-fraud pattern. One failing fraud signal must outweigh any number of passing checks.                        |
-| 3   | **No PO reference.**                                                                                                                              | Finds the vendor's best-fitting open PO by item descriptions and prices, shows the score and runner-up, and flags it as a _suggestion_, a person must confirm. | Saves the reviewer the search, but a guess must never move money.                                                          |
-| 4   | **Near-duplicate resubmission.** Same vendor, amount and items as a paid invoice, but a re-keyed number (`INV-2041` vs `INV2041-R`) and new date. | Flagged as a probable duplicate.                                                                                                                              | Exact-match duplicate checks miss exactly the cases that cost real money.                                                  |
+| #   | Scenario                                                                                                                                          | Behaviour                                                                                                                                                     | Business reasoning                                                                                                                                                                              |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | **Split invoicing against one PO.** A $10,000 PO billed in three stages.                                                                          | Stages 1 and 2 approve and consume the PO. Stage 3 bills 32 hours when only 25 remain: flagged, showing the $700 overrun.                                     | Vendors legitimately bill in stages; checking each invoice alone either blocks real invoices or lets over-billing through.                                                                      |
+| 2   | **Bank account changed.** Everything else is perfect, but the payment account differs from the vendor master.                                     | Always flagged as high risk; never auto-approved. Suggested action: call the vendor on the number in the vendor master.                                       | Classic invoice-fraud pattern. One failing fraud signal must outweigh any number of passing checks.                                                                                             |
+| 3   | **No PO reference.**                                                                                                                              | Finds the vendor's best-fitting open PO by item descriptions and prices, shows the score and runner-up, and flags it as a _suggestion_ a person must confirm. | Saves the reviewer the search, but a guess must never move money.                                                                                                                               |
+| 4   | **Near-duplicate resubmission.** Same vendor, amount and items as a paid invoice, but a re-keyed number (`INV-2041` vs `INV2041-R`) and new date. | Flagged as a probable duplicate.                                                                                                                              | Exact-match duplicate checks miss exactly the cases that cost real money.                                                                                                                       |
+| 5   | **Exact duplicate.** The vendor re-sends the identical invoice.                                                                                   | **Rejected** as a hard stop.                                                                                                                                  | Paying the same invoice twice is the most common AP loss, and an exact match is certain, so no human needs to decide. Contrast with #4, which is only _probably_ a duplicate and so is flagged. |
 
-Also covered: a **scanned** (image-only) invoice, **missing fields** (no invoice number or date), an **unknown vendor** (held pending onboarding rather than rejected, since a new supplier is not necessarily fraud),
+Also covered: a **scanned** (image-only) invoice, **missing fields** (no invoice number or date), a **blocked vendor** (hard stop), and, on any uploaded invoice, an **unknown vendor** (held pending onboarding rather than rejected, since a new supplier is not necessarily fraud),
 and a **small in-tolerance price variance** (+1.1%) that is accepted with a note.
 
-## The 12 sample invoices
+## The 13 sample invoices
 
 Run in this order on a freshly reset database (`expected.csv` has the full list with the check that should trigger):
 
-| Invoice                            | Expected                                                    |
-| ---------------------------------- | ----------------------------------------------------------- |
-| `clean_01`, `clean_02`, `clean_03` | Approved (three layouts; `clean_03` has a +1.1% price WARN) |
-| `scanned_01`                       | Approved (image-only PDF)                                   |
-| `missing_fields_01`                | Flagged (no invoice number or date)                         |
-| `split_A`, `split_B`               | Approved                                                    |
-| `split_C`                          | Flagged (PO overrun)                                        |
-| `bank_change_01`                   | Flagged (bank details changed)                              |
-| `no_po_01`                         | Flagged (suggests PO-1005)                                  |
-| `dup_resubmit_01`                  | Flagged (probable duplicate)                                |
-| `unapproved_vendor_01`             | Flagged (unknown supplier: hold pending onboarding)         |
+| Invoice                            | Expected                                                                                  |
+| ---------------------------------- | ----------------------------------------------------------------------------------------- |
+| `clean_01`, `clean_02`, `clean_03` | Approved (three layouts; `clean_03` has a +1.1% price WARN)                               |
+| `scanned_01`                       | Approved (image-only PDF)                                                                 |
+| `missing_fields_01`                | Flagged (no invoice number or date)                                                       |
+| `split_A`, `split_B`               | Approved                                                                                  |
+| `split_C`                          | Flagged (PO overrun)                                                                      |
+| `bank_change_01`                   | Flagged (bank details changed)                                                            |
+| `no_po_01`                         | Flagged (suggests PO-1005)                                                                |
+| `dup_resubmit_01`                  | Flagged (probable duplicate)                                                              |
+| `unapproved_vendor_01`             | **Rejected** (the supplier is on our blocked list)                                        |
+| `exact_dup_01`                     | **Rejected** (the vendor re-sent the identical invoice; `clean_01` was already processed) |
 
-To see a **Rejected** outcome, run any invoice a second time: an exact duplicate is a hard stop. Use **Reset demo database** to start over.
+`exact_dup_01` shows the **Rejected** outcome: an exact duplicate is a hard stop. Running any invoice a second time does the same. Use **Reset demo database** to start over.
 
 ## Project layout
 
@@ -110,7 +113,7 @@ engine/
   pipeline.py           Streams stage events; saves runs
 config/policy.yaml      Every threshold, editable
 data/                   Mock ERP seed, sample PDFs, stored extractions, expected outcomes
-tests/                  12 tests: outcome AND reason for every sample invoice
+tests/                  26 tests: outcome AND reason for every sample invoice
 run_cli.py              Terminal runner
 ```
 
@@ -139,5 +142,5 @@ run_cli.py              Terminal runner
 
 Deployed on Streamlit Community Cloud with two secrets: `GEMINI_API_KEY` and `PER_SESSION_DB = "1"`.
 With `PER_SESSION_DB=1` every visitor gets a private copy of the mock ERP, so concurrent reviewers never
-collide (locally, a single shared `data/ap.db` is used). The 12 sample invoices work from the shipped
+collide (locally, a single shared `data/ap.db` is used). The 13 sample invoices work from the shipped
 `.cache/` without any live call; only a brand-new uploaded PDF needs the Gemini key.

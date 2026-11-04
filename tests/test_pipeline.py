@@ -16,6 +16,7 @@ ROWS = sorted(csv.DictReader(open(ROOT / "data" / "expected.csv")), key=lambda r
 EXPECTED_REASON = {
     "missing_fields_01.pdf": "completeness", "split_C.pdf": "po_balance", "bank_change_01.pdf": "bank_account",
     "no_po_01.pdf": "po_match", "dup_resubmit_01.pdf": "duplicate", "unapproved_vendor_01.pdf": "vendor",
+    "exact_dup_01.pdf": "duplicate",
 }
 
 
@@ -63,9 +64,24 @@ def test_blocked_vendor_is_rejected(tmp_path):
     assert "vendor" in {c.name for c in d.checks if c.status.value == "FAIL"}
 
 
-def test_unknown_vendor_is_held_not_rejected(results):
-    d = results["unapproved_vendor_01.pdf"]
+def test_unknown_vendor_is_held_not_rejected(tmp_path):
+    import sqlite3
+    db = tmp_path / "u.db"
+    init_db(db)
+    con = sqlite3.connect(db)
+    con.execute("DELETE FROM vendors WHERE name='Shadow Trading LLC'")  # now the supplier is simply unknown
+    con.commit()
+    con.close()
+    d = _run(db, "unapproved_vendor_01.pdf")
     assert d.outcome.value == "FLAGGED" and "onboard" in d.suggested_action.lower()
+
+
+def test_blocked_vendor_sample_is_rejected(results):
+    assert results["unapproved_vendor_01.pdf"].outcome.value == "REJECTED"
+
+
+def test_exact_resend_sample_is_rejected(results):
+    assert results["exact_dup_01.pdf"].outcome.value == "REJECTED"
 
 
 def test_no_po_suggests_right_po(results):

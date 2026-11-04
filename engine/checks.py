@@ -151,7 +151,7 @@ def vendor(ctx: Ctx) -> CheckResult:
         ctx.vendor = best
         if best["approved"]:
             return res("vendor", S.PASS, f"'{name}' is an approved vendor ({best['vendor_id']}, {best['name']}).", vendor_id=best["vendor_id"], match_score=round(score))
-        return res("vendor", S.FAIL, f"'{best['name']}' exists but is NOT approved for purchasing.", V.REJECT, vendor_id=best["vendor_id"])
+        return res("vendor", S.FAIL, f"'{best['name']}' is on the blocked-supplier list and may not be paid.", V.REJECT, vendor_id=best["vendor_id"])
     # Unknown supplier: not necessarily fraud (often a new supplier not yet set up), so HOLD for a person
     # instead of rejecting. Only an explicitly blocked vendor (above) is a hard stop.
     return res("vendor", S.FAIL, f"'{name}' is not a known vendor (closest match: {best['name']}, {score:.0f}% similar). "

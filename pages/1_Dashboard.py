@@ -22,7 +22,7 @@ OUTCOME_COLORS = {"APPROVED": "#16a34a", "FLAGGED": "#d97706", "REJECTED": "#dc2
 REASON_NAMES = {  # plain-English names for the buyer
     "bank_account": "Bank details changed", "completeness": "Missing or unclear data", "duplicate": "Duplicate invoice",
     "po_balance": "Exceeds PO balance", "po_match": "PO missing or unclear", "line_prices": "Price differs from PO",
-    "tax": "Tax mismatch", "math_consistency": "Invoice arithmetic error", "vendor": "Unknown vendor (on hold)", "extraction": "Document unreadable"}
+    "tax": "Tax mismatch", "math_consistency": "Invoice arithmetic error", "vendor": "Vendor not approved", "extraction": "Document unreadable"}
 
 st.set_page_config(page_title="AP Invoice Agent: Dashboard", page_icon="📊", layout="wide")
 inject_css()

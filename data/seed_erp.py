@@ -5,7 +5,7 @@ Run from the project root:   python data/seed_erp.py
 It RESETS data/ap.db every time, so demos and tests always start clean.
 
 Tables
-  vendors          approved-vendor master + the bank account we have on file
+  vendors          vendor master (approved = 1, blocked = 0) + the bank account we have on file
   purchase_orders  one row per PO (tax rate lives here)
   po_lines         the items/qty/price each PO authorises
   invoices         processed-invoice history (duplicate detection + PO balance)
@@ -47,6 +47,8 @@ VENDORS = [
     ("V003", "Apex Industrial Supply", 1, "1100-2200-3303", "Lakeshore Bank",      "+1-555-0103"),
     ("V004", "Meridian IT Services",   1, "1100-2200-3304", "Lakeshore Bank",      "+1-555-0104"),
     ("V005", "Greenfield Catering Co", 1, "1100-2200-3305", "Harbor Trust",        "+1-555-0105"),
+    # A supplier we barred earlier (approved = 0). Any invoice from them is a hard stop.
+    ("V006", "Shadow Trading LLC",     0, "9000-0000-1234", "Offshore Credit Union", "+1-555-0199"),
 ]
 
 # po_number: (vendor, issued, tax_rate, [(description, qty, unit_price), ...])
