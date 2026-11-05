@@ -169,13 +169,13 @@ def line_items_table(inv: Invoice, decision: Decision):
         "Variance %": st.column_config.NumberColumn(format="%+.2f%%"), "Line total": st.column_config.NumberColumn(format="$%.2f")})
 
 
-def po_balance_panel(decision: Decision):
+def po_balance_panel(decision: Decision, inv: Invoice | None = None):
     chk = next((c for c in decision.checks if c.name == "po_balance" and "po_total" in c.evidence), None)
     if not chk:
         return
     ev = chk.evidence
     after = ev["billed_before"] + ev["this_invoice"]
-    st.markdown(f"**Purchase order {ev['po']}: how much has been billed**")
+    st.markdown(f"**Purchase order {ev['po']}: how much has been billed** (amounts before tax)")
     a, b, c_, d = st.columns(4)
     a.metric("PO value", money(ev["po_total"]))
     b.metric("Billed before", money(ev["billed_before"]))
@@ -183,6 +183,10 @@ def po_balance_panel(decision: Decision):
     d.metric("Remaining before", money(ev["remaining_before"]))
     if ev["po_total"]:
         st.progress(min(1.0, after / ev["po_total"]), text=f"{after / ev['po_total']:.1%} of the PO would be billed after this invoice")
+    tax_ev = next((c.evidence for c in decision.checks if c.name == "tax" and "stated" in c.evidence), None)
+    if inv is not None and tax_ev is not None and inv.total.value not in (None, ""):
+        st.caption(f"Tax is checked separately: the invoice charges {money(tax_ev['stated'])} tax and the PO's tax rate implies "
+                   f"{money(tax_ev['expected'])}. Amount payable including tax: {money(inv.total.value)}.")
     if chk.status == S.WARN:  # slightly over but inside tolerance: explain instead of leaving a puzzling >100%
         st.caption(chk.detail)
 
@@ -214,6 +218,6 @@ def render_details(decision: Decision, inv: Invoice | None):
         with right:
             st.markdown("#### Invoice lines vs purchase order")
             line_items_table(inv, decision)
-            po_balance_panel(decision)
+            po_balance_panel(decision, inv)
     with st.expander("Full check-by-check reasoning trail", expanded=False):
         check_trail(decision)
